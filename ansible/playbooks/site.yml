@@ -1,0 +1,6 @@
+---
+- name: Base configuration for all hosts
+  hosts: all
+  gather_facts: true
+  become: false
+  tasks: []
