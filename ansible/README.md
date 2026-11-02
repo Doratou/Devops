@@ -5,7 +5,7 @@ loads `ansible.cfg` automatically.
 
 ```sh
 ansible-inventory --list
-ansible-playbook playbooks/site.yml --check
+ansible-playbook -i inventories/dev/hosts.yml playbooks/site.yml --check
 ```
 
 ## Layout
