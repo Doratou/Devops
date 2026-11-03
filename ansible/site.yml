@@ -19,3 +19,8 @@
         - k3s
         - cluster
 
+    - role: helm_bootstrap
+      tags:
+        - helm_bootstrap
+        - gitops
+
