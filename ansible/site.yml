@@ -1,0 +1,26 @@
+---
+- name: Base configuration for all hosts
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - role: common
+      tags:
+        - common
+        - prepare
+
+    - role: xray
+      tags:
+        - xray
+        - vpn
+
+    - role: k3s
+      tags:
+        - k3s
+        - cluster
+
+    - role: helm_bootstrap
+      tags:
+        - helm_bootstrap
+        - gitops
+

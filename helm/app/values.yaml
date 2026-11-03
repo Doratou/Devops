@@ -1,12 +1,12 @@
 web:
   replicaCount: 1
   image:
-    repository: ghcr.io/mohammadhosein-p/pulseops-api
-    tag: sha-6cf07c9
+    repository: ghcr.io/doratou/frontend
+    tag: develop
     pullPolicy: Always
   service:
     type: ClusterIP
-    port: 3000
+    port: 8080
   resources:
     limits:
       cpu: 150m
