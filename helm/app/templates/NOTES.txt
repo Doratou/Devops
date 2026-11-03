@@ -1,0 +1,25 @@
+Doratou web has been installed.
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+{{- if eq .Values.web.service.type "NodePort" }}
+The web service is exposed as a NodePort service.
+Service: {{ .Release.Name }}-web
+Port: {{ .Values.web.service.port }}
+NodePort: {{ .Values.web.service.nodePort }}
+
+Open the application at http://<KUBERNETES_NODE_IP>:{{ .Values.web.service.nodePort }}
+{{- else if eq .Values.web.service.type "LoadBalancer" }}
+The web service is exposed through a LoadBalancer.
+
+Check for its external address with:
+  kubectl get service {{ .Release.Name }}-web --namespace {{ .Release.Namespace }}
+{{- else }}
+The web service is internal to the cluster ({{ .Values.web.service.type }}).
+
+To access it locally, run:
+  kubectl port-forward --namespace {{ .Release.Namespace }} service/{{ .Release.Name }}-web 8080:{{ .Values.web.service.port }}
+
+Then open http://127.0.0.1:8080
+{{- end }}
