@@ -48,6 +48,36 @@
   delay: 3
   until: helm_bootstrap_argocd_crd.resources | length > 0
 
+- name: Wait for Argo CD initial admin secret
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Secret
+    namespace: argocd
+    name: argocd-initial-admin-secret
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: helm_bootstrap_argocd_admin_secret
+  retries: 30
+  delay: 5
+  until: helm_bootstrap_argocd_admin_secret.resources | length > 0
+
+- name: Extract Argo CD admin password
+  ansible.builtin.set_fact:
+    helm_bootstrap_argocd_admin_password: >-
+      {{
+        helm_bootstrap_argocd_admin_secret.resources[0].data.password
+        | b64decode
+      }}
+
+- name: Display Argo CD access information
+  ansible.builtin.debug:
+    msg:
+      - "=========================================================="
+      - "Argo CD has been installed successfully."
+      - "Username: admin"
+      - "Password: {{ helm_bootstrap_argocd_admin_password }}"
+      - "Access: kubectl port-forward svc/argocd-server -n argocd 8080:80"
+      - "=========================================================="
+
 - name: Deploy Doratou Argo CD Application
   kubernetes.core.k8s:
     state: present
