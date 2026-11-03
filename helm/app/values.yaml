@@ -1,14 +1,12 @@
 web:
   replicaCount: 1
   image:
-    repository: ghcr.io/doratou/frontend
-    tag: develop
+    repository: ghcr.io/mohammadhosein-p/pulseops-api
+    tag: sha-6cf07c9
     pullPolicy: Always
   service:
-    type: NodePort
-    port: 80
-    # TODO: change service to ClusterIP in values, web-service when using ingress-nginx 
-    nodePort: 30080
+    type: ClusterIP
+    port: 3000
   resources:
     limits:
       cpu: 150m
