@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/Doratou/Devops.git
-    targetRevision: main
+    targetRevision: feat/app-chart
     path: helm/app
     helm:
       releaseName: doratou
