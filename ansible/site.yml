@@ -19,6 +19,16 @@
         - k3s
         - cluster
 
+    - role: helm_cli
+      tags:
+        - helm
+        - helm_cli
+
+    - role: sealed_secret
+      tags:
+        - sealed_secret
+        - secret
+
     - role: helm_bootstrap
       tags:
         - helm_bootstrap
