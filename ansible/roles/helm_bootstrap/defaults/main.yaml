@@ -1,3 +1,4 @@
 ---
 # Resolved on the Ansible controller; site.yml is under the ansible/ directory.
 helm_bootstrap_gitops_manifest: "{{ playbook_dir }}/../gitops/doratou.yaml"
+helm_bootstrap_install_timeout: 600

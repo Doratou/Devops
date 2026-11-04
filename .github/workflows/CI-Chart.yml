@@ -16,6 +16,9 @@ on:
       - "helm/**"
       - ".github/workflows/CI-Chart.yml"
 
+env:
+  GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
 jobs:
   gitleaks:
     name: Secret Scan (Gitleaks)

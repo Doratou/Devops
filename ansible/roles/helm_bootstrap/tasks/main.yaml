@@ -23,6 +23,27 @@
     repo_url: https://argoproj.github.io/argo-helm
     state: present
 
+- name: Wait for a Kubernetes node to become Ready
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Node
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  register: helm_bootstrap_nodes
+  retries: 30
+  delay: 5
+  until:
+    - helm_bootstrap_nodes.resources | length > 0
+    - helm_bootstrap_nodes.resources | selectattr('status.conditions', 'defined') | list | length > 0
+    - >-
+      helm_bootstrap_nodes.resources
+      | selectattr('status.conditions', 'defined')
+      | map(attribute='status.conditions')
+      | flatten
+      | selectattr('type', 'equalto', 'Ready')
+      | selectattr('status', 'equalto', 'True')
+      | list
+      | length > 0
+
 - name: Install Argo CD
   kubernetes.core.helm:
     name: argocd
@@ -31,6 +52,7 @@
     create_namespace: true
     state: present
     wait: true
+    timeout: "{{ helm_bootstrap_install_timeout }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     values:
       server:
