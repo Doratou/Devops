@@ -94,15 +94,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # - name: Run Trivy Config Scan
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     scan-type: "config"
+      #     scan-ref: "./helm/app"
+      #     exit-code: "1"
+      #     severity: "CRITICAL,HIGH"
+      #     skip-dirs: "helm/app/charts"
+      #     hide-progress: true
+
       - name: Run Trivy Config Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: "config"
-          scan-ref: "./helm/app"
-          exit-code: "1"
-          severity: "CRITICAL,HIGH"
-          skip-dirs: "helm/app/charts"
-          hide-progress: true
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            aquasec/trivy:0.76.1 \
+            config \
+            --exit-code 1 \
+            --severity CRITICAL,HIGH \
+            --skip-dirs charts \
+            /workspace/helm/app
 
   chart-testing:
     name: Chart Install Test (KinD)
