@@ -4,6 +4,18 @@ web:
     repository: ghcr.io/doratou/frontend
     tag: develop
     pullPolicy: Always
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
   service:
     type: ClusterIP
     port: 8080

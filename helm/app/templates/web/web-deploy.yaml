@@ -14,10 +14,14 @@ spec:
       labels:
         app: doratou-web
     spec:
+      securityContext:
+        {{- toYaml .Values.web.podSecurityContext | nindent 8 }}
       containers:
         - name: web
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.web.containerSecurityContext | nindent 12 }}
           ports:
             - containerPort: 8080
           readinessProbe:
