@@ -30,6 +30,9 @@ web:
 # TODO: host volume mode 1001:1001
 postgresql:
   enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: latest
 
   auth:
     username: doratou_user
@@ -57,6 +60,9 @@ postgresql:
 # TODO: host volume mode 1001:1001
 redis:
   enabled: true
+  image:
+    repository: bitnami/redis
+    tag: latest
   architecture: standalone
 
   auth:
