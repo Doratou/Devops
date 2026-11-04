@@ -27,4 +27,54 @@ web:
       cpu: 30m
       memory: 32Mi
 
+# TODO: host volume mode 1001:1001
+postgresql:
+  enabled: true
+
+  auth:
+    username: doratou_user
+    database: doratou
+    existingSecret: app-db-credentials
+    secretKeys:
+      userPasswordKey: postgresql-password
+
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+      # storageClass: ""
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+
+# TODO: host volume mode 1001:1001
+redis:
+  enabled: true
+  architecture: standalone
+
+  auth:
+    enabled: true
+    existingSecret: app-db-credentials
+    existingSecretPasswordKey: redis-password
+
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+      # storageClass: ""
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+
 hasIngress: false
