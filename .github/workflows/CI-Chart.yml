@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - feat/app-chart
+      - feat/ci
     paths:
       - "helm/**"
       - ".github/workflows/CI-Chart.yml"
