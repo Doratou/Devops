@@ -14,10 +14,17 @@ spec:
       labels:
         app: doratou-web
     spec:
+      securityContext:
+        {{- toYaml .Values.web.podSecurityContext | nindent 8 }}
       containers:
         - name: web
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.web.containerSecurityContext | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -35,3 +42,6 @@ spec:
             periodSeconds: 20
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
+      volumes:
+        - name: tmp
+          emptyDir: {}

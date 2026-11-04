@@ -1,18 +1,20 @@
 # Ansible
 
-Basic Ansible project scaffold. Run commands from this directory so Ansible
-loads `ansible.cfg` automatically.
+Run Ansible commands from this directory so `ansible.cfg` is loaded.
 
 ```sh
-ansible-inventory --list
-ansible-playbook -i inventories/dev/hosts.yml playbooks/site.yml --check
+ansible-galaxy collection install -r requirements.yaml
+ansible-inventory -i inventories/dev/hosts.ini --list
+ansible-playbook -i inventories/dev/hosts.ini site.yml --syntax-check
 ```
 
 ## Layout
 
-- `inventories/dev/hosts.yml`: development inventory (currently empty).
+- `site.yml`: main infrastructure playbook.
+- `inventories/dev/hosts.ini`: development inventory.
+- `inventories/ci/hosts.ini`: local inventory used by the CI integration job.
 - `group_vars/all.yml`: variables shared by all hosts.
-- `playbooks/site.yml`: starting playbook for host configuration.
-- `roles/`: reusable roles as the project grows.
+- `roles/`: host preparation, Xray, K3s, and Helm/Argo CD bootstrap roles.
+- `requirements.yaml`: Ansible collections used by the roles.
 
-Add hosts to the inventory before running against real infrastructure.
+Add hosts to the inventory before running the playbook against infrastructure.

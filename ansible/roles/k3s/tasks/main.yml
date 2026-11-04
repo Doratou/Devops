@@ -77,14 +77,19 @@
       NO_PROXY="127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local"
       no_proxy="127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local"
   register: k3s_proxy_env
+  when:
+    - xray_local_config is defined
+    - xray_local_config.stat.exists
 
 - name: Reload systemd and restart K3s if proxy configuration changed
   ansible.builtin.systemd:
     name: k3s
     daemon_reload: true
     state: restarted
-  # when: k3s_binary.stat.exists and k3s_proxy_env.changed
-  when: true
+  when:
+    - xray_local_config is defined
+    - xray_local_config.stat.exists
+    - k3s_proxy_env.changed
 
 - name: Display Kubernetes nodes
   ansible.builtin.debug:
