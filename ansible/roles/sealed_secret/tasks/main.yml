@@ -1,0 +1,34 @@
+---
+- name: Add Sealed Secrets Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ sealed_secrets_repository_name }}"
+    repo_url: "{{ sealed_secrets_repository_url }}"
+
+- name: Install Sealed Secrets Controller
+  kubernetes.core.helm:
+    name: "{{ sealed_secrets_release_name }}"
+    chart_ref: "{{ sealed_secrets_chart_name }}"
+    chart_version: "{{ sealed_secrets_chart_version | default(omit, true) }}"
+    release_namespace: "{{ sealed_secrets_namespace }}"
+    create_namespace: false
+    state: present
+    update_repo_cache: true
+    kubeconfig: "{{ sealed_secrets_kubeconfig }}"
+    wait: true
+    wait_timeout: 300s
+    values:
+      fullnameOverride: "{{ sealed_secrets_controller_name }}"
+      namespace: "{{ sealed_secrets_namespace }}"
+
+- name: Wait for Sealed Secrets Controller
+  ansible.builtin.command:
+    argv:
+      - kubectl
+      - --kubeconfig
+      - "{{ sealed_secrets_kubeconfig }}"
+      - wait
+      - --for=condition=Available
+      - "deployment/{{ sealed_secrets_controller_name }}"
+      - "--namespace={{ sealed_secrets_namespace }}"
+      - --timeout=180s
+  changed_when: false
