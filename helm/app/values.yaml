@@ -36,6 +36,7 @@ postgresql:
     database: doratou
     existingSecret: app-db-credentials
     secretKeys:
+      adminPasswordKey: postgres-password
       userPasswordKey: postgresql-password
 
   primary:
@@ -78,3 +79,8 @@ redis:
         memory: 256Mi
 
 hasIngress: false
+
+# Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
+sealedSecrets:
+  database:
+    enabled: false

@@ -13,6 +13,8 @@ spec:
     path: helm/app
     helm:
       releaseName: doratou
+      valueFiles:
+        - values-sealed.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: doratou

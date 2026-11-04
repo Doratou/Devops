@@ -1,2 +1,3 @@
 ansible/roles/xray/files/*.json
 db-passwords.txt
+SECRETS.md
