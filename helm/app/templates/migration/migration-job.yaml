@@ -1,0 +1,67 @@
+{{- if .Values.migration.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-migration
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-migration
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+spec:
+  backoffLimit: {{ .Values.migration.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.migration.activeDeadlineSeconds }}
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}-migration
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-for-postgresql
+          image: {{ .Values.migration.waitForPostgresqlImage | quote }}
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -ec
+            - |
+              echo "Waiting for PostgreSQL at ${PDB_HOST}:${PDB_PORT}..."
+              until pg_isready --host="${PDB_HOST}" --port="${PDB_PORT}" --username="${PDB_USER}" --dbname="${PDB_DB_NAME}"; do
+                sleep 5
+              done
+              echo "PostgreSQL is ready."
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-backend-config
+            - secretRef:
+                name: {{ .Values.backend.existingSecret | quote }}
+          env:
+            - name: PDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.databaseCredentials.existingSecret | quote }}
+                  key: {{ .Values.backend.databaseCredentials.postgresPasswordKey | quote }}
+      containers:
+        - name: migrate
+          image: "{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
+          imagePullPolicy: {{ .Values.migration.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-backend-config
+            - secretRef:
+                name: {{ .Values.backend.existingSecret | quote }}
+          env:
+            - name: PDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.databaseCredentials.existingSecret | quote }}
+                  key: {{ .Values.backend.databaseCredentials.postgresPasswordKey | quote }}
+            - name: RDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.databaseCredentials.existingSecret | quote }}
+                  key: {{ .Values.backend.databaseCredentials.redisPasswordKey | quote }}
+{{- end }}

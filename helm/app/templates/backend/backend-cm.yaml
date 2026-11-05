@@ -1,0 +1,15 @@
+{{- if or .Values.backend.enabled .Values.migration.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-backend-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-backend
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  {{- range $key, $value := .Values.backend.config }}
+  {{ $key }}: {{ if and (eq $key "PDB_HOST") (empty $value) }}{{ printf "%s-postgresql" $.Release.Name | quote }}{{ else if and (eq $key "RDB_HOST") (empty $value) }}{{ printf "%s-redis-master" $.Release.Name | quote }}{{ else }}{{ $value | toString | quote }}{{ end }}
+  {{- end }}
+{{- end }}
