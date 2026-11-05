@@ -46,6 +46,7 @@ backend:
   config:
     HTTP_DOMAIN: "0.0.0.0"
     HTTP_PORT: "8080"
+    PDB_USER: doratou_user
     PDB_HOST: ""
     PDB_PORT: "5432"
     PDB_DB_NAME: doratou

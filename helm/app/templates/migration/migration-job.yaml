@@ -43,8 +43,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-backend-config
-            - secretRef:
-                name: {{ .Values.backend.existingSecret | quote }}
           env:
             - name: PDB_PASSWORD
               valueFrom:
@@ -58,8 +56,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-backend-config
-            - secretRef:
-                name: {{ .Values.backend.existingSecret | quote }}
           env:
             - name: PDB_PASSWORD
               valueFrom:
