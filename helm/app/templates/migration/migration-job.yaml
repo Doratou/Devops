@@ -29,9 +29,16 @@ spec:
             - -ec
             - |
               echo "Waiting for PostgreSQL at ${PDB_HOST}:${PDB_PORT}..."
-              until pg_isready --host="${PDB_HOST}" --port="${PDB_PORT}" --username="${PDB_USER}" --dbname="${PDB_DB_NAME}"; do
+
+              until PGPASSWORD="${PDB_PASSWORD}" psql \
+                -h "${PDB_HOST}" \
+                -p "${PDB_PORT}" \
+                -U "${PDB_USER}" \
+                -d "${PDB_DB_NAME}" \
+                -c "SELECT 1" >/dev/null 2>&1; do
                 sleep 5
               done
+
               echo "PostgreSQL is ready."
           envFrom:
             - configMapRef:
