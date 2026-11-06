@@ -1,7 +1,7 @@
-headlamp_chart_repository_name: headlamp
-headlamp_chart_repository_url: https://kubernetes-sigs.github.io/headlamp/
-headlamp_chart_name: headlamp/headlamp
-headlamp_chart_version: "0.46.0"
-headlamp_release_name: headlamp
-headlamp_release_namespace: headlamp
-headlamp_install_timeout: 600s
+sealed_secret_headlamp_chart_repository_name: headlamp
+sealed_secret_headlamp_chart_repository_url: https://kubernetes-sigs.github.io/headlamp/
+sealed_secret_headlamp_chart_name: headlamp/headlamp
+sealed_secret_headlamp_chart_version: "0.46.0"
+sealed_secret_headlamp_release_name: headlamp
+sealed_secret_headlamp_release_namespace: headlamp
+sealed_secret_headlamp_install_timeout: 600s
