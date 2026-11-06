@@ -26,13 +26,12 @@ web:
     requests:
       cpu: 30m
       memory: 32Mi
-
 backend:
   enabled: true
   replicaCount: 2
   image:
     repository: ghcr.io/doratou/backend
-    tag: a4d08f48adb0be17290a6b7e51b7456220430319
+    tag: 4596dc9bddcae5f459ddbe8f41511570151d323b
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -80,24 +79,21 @@ backend:
     limits:
       cpu: 500m
       memory: 512Mi
-
 migration:
   enabled: true
   image:
     repository: ghcr.io/doratou/migration
-    tag: a4d08f48adb0be17290a6b7e51b7456220430319
+    tag: 4596dc9bddcae5f459ddbe8f41511570151d323b
     pullPolicy: Always
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
   activeDeadlineSeconds: 900
-
 # TODO: host volume mode 1001:1001
 postgresql:
   enabled: true
   image:
     repository: bitnami/postgresql
     tag: latest
-
   auth:
     username: doratou_user
     database: doratou
@@ -105,13 +101,11 @@ postgresql:
     secretKeys:
       adminPasswordKey: postgres-password
       userPasswordKey: postgresql-password
-
   primary:
     persistence:
       enabled: true
       size: 5Gi
       # storageClass: ""
-
     resources:
       requests:
         cpu: 100m
@@ -119,8 +113,6 @@ postgresql:
       limits:
         cpu: 500m
         memory: 512Mi
-
-
 # TODO: host volume mode 1001:1001
 redis:
   enabled: true
@@ -128,18 +120,15 @@ redis:
     repository: bitnami/redis
     tag: latest
   architecture: standalone
-
   auth:
     enabled: true
     existingSecret: app-db-credentials
     existingSecretPasswordKey: redis-password
-
   master:
     persistence:
       enabled: true
       size: 1Gi
       # storageClass: ""
-
     resources:
       requests:
         cpu: 50m
@@ -147,9 +136,7 @@ redis:
       limits:
         cpu: 250m
         memory: 256Mi
-
 hasIngress: false
-
 # Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
 sealedSecrets:
   database:
