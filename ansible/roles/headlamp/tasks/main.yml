@@ -1,0 +1,36 @@
+---
+- name: Add Headlamp Helm repository
+  kubernetes.core.helm_repository:
+    name: "{{ sealed_secret_headlamp_chart_repository_name }}"
+    repo_url: "{{ sealed_secret_headlamp_chart_repository_url }}"
+    state: present
+
+# - name: Install Headlamp with chart defaults
+#   kubernetes.core.helm:
+#     name: "{{ headlamp_release_name }}"
+#     chart_ref: "{{ sealed_secret_headlamp_chart_name }}"
+#     chart_version: "{{ sealed_secret_headlamp_chart_version }}"
+#     release_namespace: "{{ headlamp_release_namespace }}"
+#     create_namespace: true
+#     state: present
+#     wait: true
+#     timeout: "{{ headlamp_install_timeout }}"
+#     kubeconfig: /etc/rancher/k3s/k3s.yaml
+- name: Install Headlamp with chart defaults
+  kubernetes.core.helm:
+    name: "{{ headlamp_release_name }}"
+    chart_ref: "{{ sealed_secret_headlamp_chart_name }}"
+    chart_version: "{{ sealed_secret_headlamp_chart_version }}"
+    release_namespace: "{{ headlamp_release_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    timeout: "{{ headlamp_install_timeout }}"
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+  environment:
+    HTTP_PROXY: "http://127.0.0.1:{{ xray_http_port }}"
+    HTTPS_PROXY: "http://127.0.0.1:{{ xray_http_port }}"
+    http_proxy: "http://127.0.0.1:{{ xray_http_port }}"
+    https_proxy: "http://127.0.0.1:{{ xray_http_port }}"
+    NO_PROXY: "localhost,127.0.0.1,.svc,.cluster.local"
+    no_proxy: "localhost,127.0.0.1,.svc,.cluster.local"

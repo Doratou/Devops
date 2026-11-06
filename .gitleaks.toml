@@ -1,0 +1,8 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Ignore encrypted values in Kubernetes SealedSecrets"
+paths = [
+    '''helm/app/sealed-secrets/.*\.yaml$''',
+]

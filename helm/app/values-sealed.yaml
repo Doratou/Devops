@@ -1,0 +1,3 @@
+sealedSecrets:
+  database:
+    enabled: true

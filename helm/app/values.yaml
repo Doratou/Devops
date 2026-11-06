@@ -27,4 +27,130 @@ web:
       cpu: 30m
       memory: 32Mi
 
+backend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: ghcr.io/doratou/backend
+    tag: a4d08f48adb0be17290a6b7e51b7456220430319
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8080
+  # Supply this Secret outside the chart; never put credentials in values files.
+  existingSecret: doratou-secrets
+  databaseCredentials:
+    existingSecret: app-db-credentials
+    postgresPasswordKey: postgresql-password
+    redisPasswordKey: redis-password
+  config:
+    HTTP_DOMAIN: "0.0.0.0"
+    HTTP_PORT: "8080"
+    PDB_USER: doratou_user
+    PDB_HOST: ""
+    PDB_PORT: "5432"
+    PDB_DB_NAME: doratou
+    PDB_SSL_MODE: disable
+    RDB_HOST: ""
+    RDB_PORT: "6379"
+    RDB_DB_NUMBER: "0"
+    ACCESS_TOKEN_TTL: 24h
+    REFRESH_TOKEN_TTL: 168h
+    OTP_TTL: 3m
+    OTP_VERIFIED_TTL: 15m
+    OTP_DIGITS: "5"
+    SEED_USER_NAME: Example User
+    SEED_USER_EMAIL: user@example.com
+    SEED_USER_PHONE: "+12025550101"
+    SEED_ADMIN_NAME: Example Admin
+    SEED_ADMIN_EMAIL: admin@example.com
+    SEED_ADMIN_PHONE: "+12025550102"
+    CAPTCHA_ENABLED: "true"
+    CAPTCHA_TTL: 2m
+    DORATOU_EMAIL: sender@example.com
+    SMTP_HOST: smtp.gmail.com
+    SMTP_HOST_PORT: "587"
+    EMAIL_DELIVERY_ENABLED: "false"
+    EMAIL_DELIVERY_MODE: SMTP
+    FRIENDSHIP_REQUEST_COOLDOWN: 24h
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+migration:
+  enabled: true
+  image:
+    repository: ghcr.io/doratou/migration
+    tag: a4d08f48adb0be17290a6b7e51b7456220430319
+    pullPolicy: Always
+  waitForPostgresqlImage: postgres:15-alpine
+  backoffLimit: 3
+  activeDeadlineSeconds: 900
+
+# TODO: host volume mode 1001:1001
+postgresql:
+  enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: latest
+
+  auth:
+    username: doratou_user
+    database: doratou
+    existingSecret: app-db-credentials
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: postgresql-password
+
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+      # storageClass: ""
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+
+# TODO: host volume mode 1001:1001
+redis:
+  enabled: true
+  image:
+    repository: bitnami/redis
+    tag: latest
+  architecture: standalone
+
+  auth:
+    enabled: true
+    existingSecret: app-db-credentials
+    existingSecretPasswordKey: redis-password
+
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+      # storageClass: ""
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+
 hasIngress: false
+
+# Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
+sealedSecrets:
+  database:
+    enabled: false
