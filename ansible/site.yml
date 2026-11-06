@@ -24,6 +24,11 @@
         - helm
         - helm_cli
 
+    - role: headlamp
+      tags:
+        - headlamp
+        - dashboard
+
     - role: sealed_secret
       tags:
         - sealed_secret

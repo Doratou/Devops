@@ -142,6 +142,15 @@ jobs:
       - name: Create KinD Cluster
         uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
 
+      - name: Create disposable chart-test credentials
+        run: |
+          kubectl create namespace chart-testing
+          kubectl create secret generic app-db-credentials \
+            --namespace chart-testing \
+            --from-literal=postgres-password=ci-only-admin-password \
+            --from-literal=postgresql-password=ci-only-user-password \
+            --from-literal=redis-password=ci-only-redis-password
+
       - name: Add Helm Repositories
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -149,4 +158,6 @@ jobs:
 
       - name: Run Chart Install Test
         run: |
-          ct install --config .github/ct.yaml --charts helm/app
+          ct install --config .github/ct.yaml --charts helm/app \
+            --namespace chart-testing \
+            --helm-extra-set-args "--set=sealedSecrets.database.enabled=false"
