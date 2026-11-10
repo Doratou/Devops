@@ -1,0 +1,5 @@
+*.yaml linguist-detectable=true
+*.yml linguist-detectable=true
+
+*.tpl linguist-detectable=false
+*.j2 linguist-detectable=false
