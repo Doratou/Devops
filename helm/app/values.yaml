@@ -88,6 +88,35 @@ migration:
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
   activeDeadlineSeconds: 900
+docs:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: ghcr.io/doratou/api-docs
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 8080
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    runAsGroup: 101
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
 # TODO: host volume mode 1001:1001
 postgresql:
   enabled: true
