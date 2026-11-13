@@ -17,8 +17,8 @@ web:
       drop:
         - ALL
   service:
-    type: ClusterIP
-    port: 8080
+    type: LoadBalancer
+    port: 80
   resources:
     limits:
       cpu: 150m
@@ -34,8 +34,8 @@ backend:
     tag: 2ae78b5acae79349d0a54de7579d2da4785d5bea
     pullPolicy: Always
   service:
-    type: ClusterIP
-    port: 8080
+    type: LoadBalancer
+    port: 3000
   # Supply this Secret outside the chart; never put credentials in values files.
   existingSecret: doratou-secrets
   databaseCredentials:
@@ -96,7 +96,7 @@ docs:
     tag: 2ae78b5acae79349d0a54de7579d2da4785d5bea
     pullPolicy: Always
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 8080
   podSecurityContext:
     runAsNonRoot: true
