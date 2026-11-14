@@ -26,13 +26,12 @@ web:
     requests:
       cpu: 30m
       memory: 32Mi
-
 backend:
   enabled: true
   replicaCount: 2
   image:
     repository: ghcr.io/doratou/backend
-    tag: 2ae78b5acae79349d0a54de7579d2da4785d5bea
+    tag: a96a0bbcc8f2c027e572d0bf63c210d657078db7
     pullPolicy: Always
   service:
     type: LoadBalancer
@@ -77,30 +76,25 @@ backend:
     SEED_GROUP_TITLE: "برنامه تجریش"
     SEED_GROUP_DESCRIPTION: "اول بندری میخوریم بعدش میریم رو پله های باغ فردوس می شینیم"
     GROUP_DIRECT_INVITE_REJECT_COOLDOWN: 24h
-
     LOGGER_LEVEL: info
     LOGGER_DIRECTORY: logs
     LOGGER_ENVIRONMENT: production
     LOGGER_CONSOLE_ENABLED: "true"
     LOGGER_MAX_SIZE_MB: "20"
     LOGGER_RETENTION_DAYS: "14"
-
     RUSTFS_ENDPOINT: "doratou-rustfs:9000"
     RUSTFS_BUCKET_NAME: doratou-storage
     RUSTFS_USE_SSL: "false"
     RUSTFS_REGION: us-east-1
     RUSTFS_PUBLIC_URL_PREFIX: "https://dorato.fpna.ir/doratou-storage"
     RUSTFS_MAX_CONCURRENCY: "8"
-
     POW_CHALLENGE_TTL: 5m
     POW_BLOCK_TTL: 15m
     POW_DIFFICULTY: "16"
     POW_L1_LIMIT: "50"
     POW_L2_LIMIT: "20"
-
     # GOOGLE_CLIENT_ID: "476-4e16n0ketm.apps.googleusercontent.com"
     GOOGLE_REDIRECT_ENDPOINT: "/api/v1/auth/google/callback"
-
   resources:
     requests:
       cpu: 100m
@@ -108,23 +102,21 @@ backend:
     limits:
       cpu: 500m
       memory: 512Mi
-
 migration:
   enabled: true
   image:
     repository: ghcr.io/doratou/migration
-    tag: 2ae78b5acae79349d0a54de7579d2da4785d5bea
+    tag: a96a0bbcc8f2c027e572d0bf63c210d657078db7
     pullPolicy: Always
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
   activeDeadlineSeconds: 900
-
 docs:
   enabled: true
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/api-docs
-    tag: 2ae78b5acae79349d0a54de7579d2da4785d5bea
+    tag: a96a0bbcc8f2c027e572d0bf63c210d657078db7
     pullPolicy: Always
   service:
     type: LoadBalancer
@@ -148,7 +140,6 @@ docs:
     limits:
       cpu: 100m
       memory: 64Mi
-
 # TODO: host volume mode 1001:1001
 postgresql:
   enabled: true
@@ -174,7 +165,6 @@ postgresql:
       limits:
         cpu: 500m
         memory: 512Mi
-
 # TODO: host volume mode 1001:1001
 redis:
   enabled: true
@@ -199,14 +189,12 @@ redis:
         cpu: 250m
         memory: 256Mi
 hasIngress: false
-
 # Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
 sealedSecrets:
   database:
     enabled: false
   backend:
     enabled: false
-
 rustfs:
   enabled: true
   image:
