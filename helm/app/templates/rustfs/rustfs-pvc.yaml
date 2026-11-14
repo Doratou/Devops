@@ -1,0 +1,16 @@
+{{- if and .Values.rustfs.enabled .Values.rustfs.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-rustfs-data
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.rustfs.persistence.storageClass }}
+  storageClassName: {{ .Values.rustfs.persistence.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.rustfs.persistence.size }}
+{{- end }}
