@@ -82,7 +82,7 @@ backend:
     LOGGER_CONSOLE_ENABLED: "true"
     LOGGER_MAX_SIZE_MB: "20"
     LOGGER_RETENTION_DAYS: "14"
-    RUSTFS_ENDPOINT: "doratou-rustfs:9000"
+    RUSTFS_ENDPOINT: ""
     RUSTFS_BUCKET_NAME: doratou-storage
     RUSTFS_USE_SSL: "false"
     RUSTFS_REGION: us-east-1
