@@ -150,6 +150,20 @@ jobs:
             --from-literal=postgres-password=ci-only-admin-password \
             --from-literal=postgresql-password=ci-only-user-password \
             --from-literal=redis-password=ci-only-redis-password
+          kubectl create secret generic doratou-secrets \
+            --namespace chart-testing \
+            --from-literal=JWT_SECRET_KEY=ci_test_jwt_secret_key_32bytes_minimum_value \
+            --from-literal=INVITE_ENCRYPTION_SECRET=ci_test_invite_secret_key_32bytes \
+            --from-literal=POW_HMAC_SECRET=ci_test_pow_hmac_secret_key_32bytes \
+            --from-literal=RUSTFS_ACCESS_KEY_ID=minioadmin123456 \
+            --from-literal=RUSTFS_SECRET_ACCESS_KEY=minioadmin123456 \
+            --from-literal=SEED_USER_PASSWORD=ci-only-user-password \
+            --from-literal=SEED_ADMIN_PASSWORD=ci-only-admin-password \
+            --from-literal=SEED_GROUP_INVITE_PASSWORD=ci-only-group-password \
+            --from-literal=DORATOU_EMAIL=ci@example.com \
+            --from-literal=DORATOU_EMAIL_APP_PASSWORD=ci-only-app-password \
+            --from-literal=GOOGLE_CLIENT_ID=ci-only-client-id \
+            --from-literal=GOOGLE_CLIENT_SECRET=ci-only-client-secret
 
       - name: Add Helm Repositories
         run: |
@@ -160,4 +174,5 @@ jobs:
         run: |
           ct install --config .github/ct.yaml --charts helm/app \
             --namespace chart-testing \
-            --helm-extra-set-args "--set=sealedSecrets.database.enabled=false"
+            --helm-extra-args "--timeout 10m" \
+            --helm-extra-set-args "--set=sealedSecrets.database.enabled=false --set=sealedSecrets.backend.enabled=false" 
