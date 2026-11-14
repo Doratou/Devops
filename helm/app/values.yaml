@@ -97,7 +97,7 @@ backend:
     POW_L1_LIMIT: "50"
     POW_L2_LIMIT: "20"
 
-    GOOGLE_CLIENT_ID: "476-4e16n0ketm.apps.googleusercontent.com"
+    # GOOGLE_CLIENT_ID: "476-4e16n0ketm.apps.googleusercontent.com"
     GOOGLE_REDIRECT_ENDPOINT: "/api/v1/auth/google/callback"
 
   resources:
@@ -202,6 +202,8 @@ hasIngress: false
 # Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
 sealedSecrets:
   database:
+    enabled: false
+  backend:
     enabled: false
 
 rustfs:

@@ -1,3 +1,5 @@
 sealedSecrets:
   database:
     enabled: true
+  backend:
+    enabled: true
