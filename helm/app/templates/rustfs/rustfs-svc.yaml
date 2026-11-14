@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-rustfs
   namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   type: {{ .Values.rustfs.service.type }}
   selector:
