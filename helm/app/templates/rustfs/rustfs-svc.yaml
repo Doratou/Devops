@@ -1,0 +1,20 @@
+{{- if .Values.rustfs.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-rustfs
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  type: {{ .Values.rustfs.service.type }}
+  selector:
+    app: {{ .Release.Name }}-rustfs
+  ports:
+    - name: api
+      port: {{ .Values.rustfs.service.apiPort }}
+      targetPort: 9000
+    - name: console
+      port: {{ .Values.rustfs.service.consolePort }}
+      targetPort: 9001
+{{- end }}

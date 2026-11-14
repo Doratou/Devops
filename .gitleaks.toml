@@ -3,6 +3,10 @@ useDefault = true
 
 [[allowlists]]
 description = "Ignore encrypted values in Kubernetes SealedSecrets"
+condition = "OR"
 paths = [
-    '''helm/app/sealed-secrets/.*\.yaml$''',
+    '''helm/app/sealed-secrets/.*\.ya?ml$''',
+]
+regexes = [
+    '''Ag[A-Za-z0-9+/=]{100,}''',
 ]

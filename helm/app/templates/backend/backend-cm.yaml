@@ -10,6 +10,6 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 data:
   {{- range $key, $value := .Values.backend.config }}
-  {{ $key }}: {{ if and (eq $key "PDB_HOST") (empty $value) }}{{ printf "%s-postgresql" $.Release.Name | quote }}{{ else if and (eq $key "RDB_HOST") (empty $value) }}{{ printf "%s-redis-master" $.Release.Name | quote }}{{ else }}{{ $value | toString | quote }}{{ end }}
+  {{ $key }}: {{ if and (eq $key "PDB_HOST") (empty $value) }}{{ printf "%s-postgresql" $.Release.Name | quote }}{{ else if and (eq $key "RDB_HOST") (empty $value) }}{{ printf "%s-redis-master" $.Release.Name | quote }}{{ else if and (eq $key "RUSTFS_ENDPOINT") (empty $value) }}{{ printf "%s-rustfs:9000" $.Release.Name | quote }}{{ else }}{{ $value | toString | quote }}{{ end }}
   {{- end }}
 {{- end }}
