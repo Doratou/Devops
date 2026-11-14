@@ -65,7 +65,7 @@ backend:
     SEED_ADMIN_NAME: Example Admin
     SEED_ADMIN_EMAIL: admin@example.com
     SEED_ADMIN_PHONE: "+12025550102"
-    CAPTCHA_ENABLED: "true"
+    CAPTCHA_ENABLED: "false"
     CAPTCHA_TTL: 2m
     SMTP_HOST: smtp.gmail.com
     SMTP_HOST_PORT: "587"
