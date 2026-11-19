@@ -100,7 +100,7 @@
         url: git@github.com:Doratou/Devops.git
         sshPrivateKey: "{{ helm_bootstrap_vault_argocd_gitops_private_key }}"
   no_log: true
-  tags: 
+  tags:
     - vault
 
 - name: Deploy Doratou Argo CD Application
@@ -108,5 +108,5 @@
     state: present
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     definition: "{{ lookup('ansible.builtin.file', helm_bootstrap_gitops_manifest) | from_yaml }}"
-  tags: 
+  tags:
     - vault

@@ -3,6 +3,10 @@ name: SonarQube build
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  
+  push:
+    branches:
+      - main
 jobs:
   sonarqube:
     name: SonarQube
