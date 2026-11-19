@@ -44,9 +44,9 @@ backend:
     redisPasswordKey: redis-password
   config:
     GIN_MODE: "release"
-    HTTP_PROTCOL: "https"
+    HTTP_PROTCOL: "http"
     HTTP_DOMAIN: "api.dorato.fpna.ir"
-    HTTP_PORT: "443"
+    HTTP_PORT: "80"
     PDB_USER: doratou_user
     PDB_HOST: ""
     PDB_PORT: "5432"

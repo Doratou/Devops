@@ -40,6 +40,10 @@
       server:
         extraArgs:
           - --insecure
+        service:
+          type: LoadBalancer
+          servicePortHttp: 3001
+          servicePortHttps: 3443
 
 - name: Wait for Argo CD Application CRD to be ready
   kubernetes.core.k8s_info:
@@ -79,7 +83,7 @@
       - "Argo CD has been installed successfully."
       - "Username: admin"
       - "Password: {{ helm_bootstrap_argocd_admin_password }}"
-      - "Access: kubectl port-forward svc/argocd-server -n argocd 8080:80"
+      - "Access: http://<SERVER_IP>:3001"
       - "=========================================================="
 
 - name: Configure private GitOps repository credentials
