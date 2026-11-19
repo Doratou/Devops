@@ -82,6 +82,25 @@
       - "Access: kubectl port-forward svc/argocd-server -n argocd 8080:80"
       - "=========================================================="
 
+- name: Configure private GitOps repository credentials
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: repo-doratou-devops
+        namespace: argocd
+        labels:
+          argocd.argoproj.io/secret-type: repository
+      type: Opaque
+      stringData:
+        type: git
+        url: git@github.com:Doratou/Devops.git
+        sshPrivateKey: "{{ helm_bootstrap_vault_argocd_gitops_private_key }}"
+  no_log: true
+
 - name: Deploy Doratou Argo CD Application
   kubernetes.core.k8s:
     state: present
