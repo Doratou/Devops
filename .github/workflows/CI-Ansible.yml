@@ -38,6 +38,10 @@ jobs:
           pip install ansible-core ansible-lint yamllint kubernetes jsonpatch pyyaml
           ansible-galaxy collection install -r ansible/requirements.yaml
 
+      - name: Ignore Encrypted Vault Files in CI
+        run: |
+          grep -rl '\$ANSIBLE_VAULT' ansible/ | xargs -r -I {} bash -c 'echo "---" > "{}"'
+
       - name: Check Ansible Playbook Syntax
         run: |
           cd ansible
@@ -67,6 +71,10 @@ jobs:
           pip install ansible-core kubernetes jsonpatch pyyaml
           ansible-galaxy collection install -r ansible/requirements.yaml
 
+      - name: Ignore Encrypted Vault Files in CI
+        run: |
+          grep -rl '\$ANSIBLE_VAULT' ansible/ | xargs -r -I {} bash -c 'echo "---" > "{}"'
+
       - name: Prepare Local Inventory for CI
         run: |
           cd ansible
@@ -76,7 +84,7 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           cd ansible
-          sudo -E env "PATH=$PATH" ANSIBLE_STDOUT_CALLBACK=default ansible-playbook site.yml -i inventories/ci/hosts.ini
+          sudo -E env "PATH=$PATH" ANSIBLE_STDOUT_CALLBACK=default ansible-playbook site.yml -i inventories/ci/hosts.ini --skip-tags vault
 
       - name: Verify K3s Cluster & Bootstrap Pods
         run: |
