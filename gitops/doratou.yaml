@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Doratou/Devops.git
+    repoURL: git@github.com:Doratou/Devops.git
     targetRevision: main
     path: helm/app
     helm:
