@@ -82,6 +82,27 @@
       - "Access: kubectl port-forward svc/argocd-server -n argocd 8080:80"
       - "=========================================================="
 
+- name: Fetch GitHub SSH host keys on port 443
+  ansible.builtin.command: ssh-keyscan -p 443 ssh.github.com
+  register: helm_bootstrap_github_ssh_known_hosts
+  changed_when: false
+
+- name: Configure Argo CD SSH known hosts for port 443
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: argocd-ssh-known-hosts-cm
+        namespace: argocd
+        labels:
+          app.kubernetes.io/name: argocd-ssh-known-hosts-cm
+          app.kubernetes.io/part-of: argocd
+      data:
+        ssh_known_hosts: "{{ helm_bootstrap_github_ssh_known_hosts.stdout }}"
+
 - name: Configure private GitOps repository credentials
   kubernetes.core.k8s:
     state: present
@@ -97,7 +118,7 @@
       type: Opaque
       stringData:
         type: git
-        url: git@github.com:Doratou/Devops.git
+        url: ssh://git@ssh.github.com:443/Doratou/Devops.git
         sshPrivateKey: "{{ helm_bootstrap_vault_argocd_gitops_private_key }}"
   no_log: true
   tags:
