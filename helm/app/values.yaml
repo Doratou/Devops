@@ -31,7 +31,7 @@ backend:
   replicaCount: 2
   image:
     repository: ghcr.io/doratou/backend
-    tag: a070dcaf7d05ad30ffb38229217e1d72a7db56b7
+    tag: 4175c6a88062f7212753d6de8fe64f2d227d3d1a
     pullPolicy: Always
   service:
     type: LoadBalancer
@@ -96,10 +96,8 @@ backend:
     POW_L2_LIMIT: "20"
     # GOOGLE_CLIENT_ID: "476-4e16n0ketm.apps.googleusercontent.com"
     GOOGLE_REDIRECT_ENDPOINT: "/api/v1/auth/google/callback"
-
     AVALAI_BASE_URL: 'https://api.avalai.ir/v1'
     AVALAI_MODEL: 'gpt-6-luna'
-
   resources:
     requests:
       cpu: 100m
@@ -111,7 +109,7 @@ migration:
   enabled: true
   image:
     repository: ghcr.io/doratou/migration
-    tag: a070dcaf7d05ad30ffb38229217e1d72a7db56b7
+    tag: 4175c6a88062f7212753d6de8fe64f2d227d3d1a
     pullPolicy: Always
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
@@ -121,7 +119,7 @@ docs:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/api-docs
-    tag: a070dcaf7d05ad30ffb38229217e1d72a7db56b7
+    tag: 4175c6a88062f7212753d6de8fe64f2d227d3d1a
     pullPolicy: Always
   service:
     type: LoadBalancer
