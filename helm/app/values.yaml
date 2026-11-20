@@ -100,7 +100,7 @@ backend:
     AVALAI_MODEL: 'gpt-6-luna'
     OAUTH_PROTCOL: "https"
     OAUTH_DOMAIN: "api.dorato.fpna.ir"
-    OAUTH_PORT: "3000"
+    OAUTH_PORT: "443"
 
   resources:
     requests:
