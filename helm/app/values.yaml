@@ -2,7 +2,7 @@ web:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/frontend
-    tag: b075aa5304a4c4c35e0f08929a2273d0026fa2d4
+    tag: eacad213f363bb2cc62e55895d6f0c6be9baeb69
     pullPolicy: Always
   podSecurityContext:
     runAsNonRoot: true
@@ -106,11 +106,9 @@ backend:
     OAUTH_FRONTEND_DOMAIN: "dorato.fpna.ir"
     OAUTH_FRONTEND_PORT: "443"
     OAUTH_FRONTEND_ENDPOINT: "/auth/callback"
-
     HTTP_PROXY: "http://10.42.0.1:1081"
     HTTPS_PROXY: "http://10.42.0.1:1081"
     NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
-
   resources:
     requests:
       cpu: 100m
