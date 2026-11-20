@@ -31,7 +31,7 @@ backend:
   replicaCount: 2
   image:
     repository: ghcr.io/doratou/backend
-    tag: 3973bc14bc394a994290aefe853e17d8a5967a6a
+    tag: a514abe1254180104f9f03787c68623ea3ff600f
     pullPolicy: Always
   service:
     type: LoadBalancer
@@ -101,7 +101,6 @@ backend:
     OAUTH_PROTCOL: "https"
     OAUTH_DOMAIN: "api.dorato.fpna.ir"
     OAUTH_PORT: "443"
-
   resources:
     requests:
       cpu: 100m
@@ -113,7 +112,7 @@ migration:
   enabled: true
   image:
     repository: ghcr.io/doratou/migration
-    tag: 3973bc14bc394a994290aefe853e17d8a5967a6a
+    tag: a514abe1254180104f9f03787c68623ea3ff600f
     pullPolicy: Always
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
@@ -123,7 +122,7 @@ docs:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/api-docs
-    tag: 3973bc14bc394a994290aefe853e17d8a5967a6a
+    tag: a514abe1254180104f9f03787c68623ea3ff600f
     pullPolicy: Always
   service:
     type: LoadBalancer
