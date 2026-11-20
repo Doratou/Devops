@@ -70,7 +70,7 @@ backend:
     CAPTCHA_TTL: 2m
     SMTP_HOST: smtp.gmail.com
     SMTP_HOST_PORT: "587"
-    EMAIL_DELIVERY_ENABLED: "false"
+    EMAIL_DELIVERY_ENABLED: "true"
     EMAIL_DELIVERY_MODE: SMTP
     FRIENDSHIP_REQUEST_COOLDOWN: 24h
     EMAIL_FONT_BASE_URL: ""
@@ -101,6 +101,10 @@ backend:
     OAUTH_PROTCOL: "https"
     OAUTH_DOMAIN: "api.dorato.fpna.ir"
     OAUTH_PORT: "443"
+    HTTP_PROXY: "http://10.42.0.1:1081"
+    HTTPS_PROXY: "http://10.42.0.1:1081"
+    NO_PROXY: "localhost,127.0.0.1,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
+
   resources:
     requests:
       cpu: 100m
