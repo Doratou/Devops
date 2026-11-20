@@ -98,6 +98,10 @@ backend:
     GOOGLE_REDIRECT_ENDPOINT: "/api/v1/auth/google/callback"
     AVALAI_BASE_URL: 'https://api.avalai.ir/v1'
     AVALAI_MODEL: 'gpt-6-luna'
+    OAUTH_PROTCOL: "https"
+    OAUTH_DOMAIN: "api.dorato.fpna.ir"
+    OAUTH_PORT: "3000"
+
   resources:
     requests:
       cpu: 100m
