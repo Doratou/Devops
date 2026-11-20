@@ -101,9 +101,16 @@ backend:
     OAUTH_PROTCOL: "https"
     OAUTH_DOMAIN: "api.dorato.fpna.ir"
     OAUTH_PORT: "443"
+    OAUTH_FRONTEND_ENABLED: "true"
+    OAUTH_FRONTEND_PROTCOL: "https"
+    OAUTH_FRONTEND_DOMAIN: "dorato.fpna.ir"
+    OAUTH_FRONTEND_PORT: "443"
+    OAUTH_FRONTEND_ENDPOINT: "/auth/callback"
+
     HTTP_PROXY: "http://10.42.0.1:1081"
     HTTPS_PROXY: "http://10.42.0.1:1081"
     NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
+
   resources:
     requests:
       cpu: 100m
