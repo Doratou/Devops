@@ -45,7 +45,7 @@ backend:
   config:
     GIN_MODE: "release"
     HTTP_PROTCOL: "http"
-    HTTP_DOMAIN: "api.dorato.fpna.ir"
+    HTTP_DOMAIN: "0.0.0.0"
     HTTP_PORT: "3000"
     PDB_USER: doratou_user
     PDB_HOST: ""
