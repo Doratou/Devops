@@ -10,10 +10,13 @@ kube-prometheus-stack:
 
   grafana:
     enabled: true
-    adminPassword: "StrongPassword123!"
+    admin:
+      existingSecret: "grafana-admin-credentials"
+      userKey: admin-user
+      passwordKey: admin-password
     service:
       type: LoadBalancer
-      port: 3000
+      port: 3002
     resources:
       requests:
         cpu: 50m
