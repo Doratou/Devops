@@ -128,10 +128,13 @@
   tags:
     - vault
 
-- name: Deploy Doratou Argo CD Application
+- name: Deploy Argo CD Applications
   kubernetes.core.k8s:
     state: present
     kubeconfig: /etc/rancher/k3s/k3s.yaml
-    definition: "{{ lookup('ansible.builtin.file', helm_bootstrap_gitops_manifest) | from_yaml }}"
+    definition: "{{ lookup('ansible.builtin.file', item) | from_yaml }}"
+  loop: "{{ helm_bootstrap_gitops_manifests }}"
+  loop_control:
+    label: "{{ item | basename }}"
   tags:
     - vault
