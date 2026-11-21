@@ -14,7 +14,7 @@ spec:
     helm:
       releaseName: monitoring
       valueFiles:
-        - values.yaml
+        - values-sealed.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

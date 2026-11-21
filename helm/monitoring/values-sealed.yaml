@@ -1,0 +1,3 @@
+sealedSecrets:
+  grafana:
+    enabled: true

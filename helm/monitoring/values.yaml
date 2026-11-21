@@ -47,3 +47,8 @@ kube-prometheus-stack:
         limits:
           cpu: 100m
           memory: 128Mi
+
+# Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
+sealedSecrets:
+  grafana:
+    enabled: false
