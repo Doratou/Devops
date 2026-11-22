@@ -170,6 +170,15 @@ alloy:
           }
         }
 
+rustfsBucketInit:
+  enabled: true
+  image: minio/mc:latest
+  endpoint: http://doratou-rustfs.doratou.svc.cluster.local:9000
+  existingSecret: loki-s3-credentials
+  buckets:
+    - loki-chunks
+    - tempo-traces
+
 # Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
 sealedSecrets:
   grafana:
