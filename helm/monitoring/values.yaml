@@ -17,6 +17,13 @@ kube-prometheus-stack:
     service:
       type: LoadBalancer
       port: 3002
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        uid: loki
+        url: http://monitoring-loki:3100
+        access: proxy
+        isDefault: false
     resources:
       requests:
         cpu: 50m
@@ -48,7 +55,124 @@ kube-prometheus-stack:
           cpu: 100m
           memory: 128Mi
 
+loki:
+  deploymentMode: SingleBinary
+  loki:
+    auth_enabled: false
+    commonConfig:
+      replication_factor: 1
+    schemaConfig:
+      configs:
+        - from: "2024-04-01"
+          store: tsdb
+          object_store: s3
+          schema: v13
+          index:
+            prefix: loki_index_
+            period: 24h
+    storage:
+      type: s3
+      bucketNames:
+        chunks: loki-chunks
+        ruler: loki-chunks
+        admin: loki-chunks
+      s3:
+        endpoint: http://doratou-rustfs.doratou.svc.cluster.local:9000
+        region: us-east-1
+        s3ForcePathStyle: true
+        insecure: true
+    compactor:
+      retention_enabled: true
+      delete_request_store: s3
+    limits_config:
+      retention_period: 336h # 14 days (matches backend LOGGER_RETENTION_DAYS)
+  singleBinary:
+    replicas: 1
+    persistence:
+      enabled: true
+      size: 2Gi
+    extraEnvFrom:
+      - secretRef:
+          name: loki-s3-credentials
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+  read:
+    replicas: 0
+  write:
+    replicas: 0
+  backend:
+    replicas: 0
+  gateway:
+    enabled: false
+  chunksCache:
+    enabled: false
+  resultsCache:
+    enabled: false
+  minio:
+    enabled: false
+  lokiCanary:
+    enabled: false
+  test:
+    enabled: false
+
+alloy:
+  controller:
+    type: deployment
+    replicas: 1
+  alloy:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+    configMap:
+      content: |
+        discovery.kubernetes "pods" {
+          role = "pod"
+        }
+
+        discovery.relabel "pod_logs" {
+          targets = discovery.kubernetes.pods.targets
+
+          rule {
+            source_labels = ["__meta_kubernetes_namespace"]
+            target_label  = "namespace"
+          }
+          rule {
+            source_labels = ["__meta_kubernetes_pod_name"]
+            target_label  = "pod"
+          }
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            target_label  = "container"
+          }
+          rule {
+            source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+            target_label  = "app"
+          }
+        }
+
+        loki.source.kubernetes "pod_logs" {
+          targets    = discovery.relabel.pod_logs.output
+          forward_to = [loki.write.default.receiver]
+        }
+
+        loki.write "default" {
+          endpoint {
+            url = "http://monitoring-loki:3100/loki/api/v1/push"
+          }
+        }
+
 # Ciphertext overrides are kept in values-sealed.yaml, never plaintext here.
 sealedSecrets:
   grafana:
+    enabled: false
+  loki:
     enabled: false

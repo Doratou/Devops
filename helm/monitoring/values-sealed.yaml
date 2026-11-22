@@ -1,3 +1,5 @@
 sealedSecrets:
   grafana:
     enabled: true
+  loki:
+    enabled: true
