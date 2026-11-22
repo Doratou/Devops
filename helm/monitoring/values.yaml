@@ -24,6 +24,27 @@ kube-prometheus-stack:
         url: http://monitoring-loki:3100
         access: proxy
         isDefault: false
+        jsonData:
+          derivedFields:
+            - datasourceUid: tempo
+              matcherRegex: '"trace_id":"(\w+)"'
+              name: TraceID
+              url: '$${__value.raw}'
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        url: http://monitoring-tempo:3200
+        access: proxy
+        isDefault: false
+        jsonData:
+          tracesToLogsV2:
+            datasourceUid: loki
+            spanStartTimeShift: '-1h'
+            spanEndTimeShift: '1h'
+            filterByTraceID: true
+            filterBySpanID: false
+          nodeGraph:
+            enabled: true
     resources:
       requests:
         cpu: 50m
@@ -85,7 +106,7 @@ loki:
       retention_enabled: true
       delete_request_store: s3
     limits_config:
-      retention_period: 336h # 14 days (matches backend LOGGER_RETENTION_DAYS)
+      retention_period: 336h
   singleBinary:
     replicas: 1
     persistence:
@@ -120,11 +141,54 @@ loki:
   test:
     enabled: false
 
+tempo:
+  replicas: 1
+  tempo:
+    retention: 336h # 14 days
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: "0.0.0.0:4317"
+          http:
+            endpoint: "0.0.0.0:4318"
+    storage:
+      trace:
+        backend: s3
+        s3:
+          bucket: tempo-traces
+          endpoint: doratou-rustfs.doratou.svc.cluster.local:9000
+          region: us-east-1
+          insecure: true
+          forcepathstyle: true
+    extraEnvFrom:
+      - secretRef:
+          name: loki-s3-credentials
+  persistence:
+    enabled: true
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 300m
+      memory: 512Mi
+
 alloy:
   controller:
     type: deployment
     replicas: 1
   alloy:
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
     resources:
       requests:
         cpu: 50m
@@ -134,6 +198,7 @@ alloy:
         memory: 256Mi
     configMap:
       content: |
+        // --- 1. Logs Pipeline (Kubernetes Pods -> Loki) ---
         discovery.kubernetes "pods" {
           role = "pod"
         }
@@ -167,6 +232,34 @@ alloy:
         loki.write "default" {
           endpoint {
             url = "http://monitoring-loki:3100/loki/api/v1/push"
+          }
+        }
+
+        // --- 2. Traces Pipeline (OTLP -> Tempo) ---
+        otelcol.receiver.otlp "default" {
+          grpc {
+            endpoint = "0.0.0.0:4317"
+          }
+          http {
+            endpoint = "0.0.0.0:4318"
+          }
+          output {
+            traces = [otelcol.processor.batch.default.input]
+          }
+        }
+
+        otelcol.processor.batch "default" {
+          output {
+            traces = [otelcol.exporter.otlp.tempo.input]
+          }
+        }
+
+        otelcol.exporter.otlp "tempo" {
+          client {
+            endpoint = "monitoring-tempo:4317"
+            tls {
+              insecure = true
+            }
           }
         }
 
