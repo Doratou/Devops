@@ -172,8 +172,9 @@ alloy:
 
 rustfsBucketInit:
   enabled: true
-  image: minio/mc:latest
+  image: public.ecr.aws/aws-cli/aws-cli:latest
   endpoint: http://doratou-rustfs.doratou.svc.cluster.local:9000
+  region: us-east-1
   existingSecret: loki-s3-credentials
   buckets:
     - loki-chunks

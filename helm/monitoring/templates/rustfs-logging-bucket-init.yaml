@@ -16,10 +16,12 @@ spec:
         - name: create-buckets
           image: {{ .Values.rustfsBucketInit.image }}
           env:
-            - name: MC_CONFIG_DIR
-              value: /tmp/.mc
             - name: S3_ENDPOINT
               value: {{ .Values.rustfsBucketInit.endpoint | quote }}
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.rustfsBucketInit.region | default "us-east-1" | quote }}
+            - name: AWS_EC2_METADATA_DISABLED
+              value: "true"
           envFrom:
             - secretRef:
                 name: {{ .Values.rustfsBucketInit.existingSecret }}
@@ -28,15 +30,19 @@ spec:
             - -c
             - |
               set -e
-              mc alias set rustfs "$S3_ENDPOINT" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY"
               {{- range .Values.rustfsBucketInit.buckets }}
-              mc mb --ignore-existing "rustfs/{{ . }}"
+              if ! aws --endpoint-url "$S3_ENDPOINT" s3api head-bucket --bucket "{{ . }}" 2>/dev/null; then
+                echo "Creating bucket {{ . }}..."
+                aws --endpoint-url "$S3_ENDPOINT" s3 mb "s3://{{ . }}"
+              else
+                echo "Bucket {{ . }} already exists."
+              fi
               {{- end }}
           resources:
             requests:
               cpu: 25m
-              memory: 32Mi
+              memory: 64Mi
             limits:
               cpu: 100m
-              memory: 64Mi
+              memory: 128Mi
 {{- end }}
