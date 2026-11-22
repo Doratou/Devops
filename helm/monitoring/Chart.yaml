@@ -14,3 +14,6 @@ dependencies:
   - name: alloy
     version: "0.10.1"
     repository: "https://grafana.github.io/helm-charts"
+  - name: tempo
+    version: "1.10.3"
+    repository: "https://grafana.github.io/helm-charts"
