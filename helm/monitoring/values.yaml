@@ -180,6 +180,7 @@ alloy:
     type: deployment
     replicas: 1
   alloy:
+    stabilityLevel: "experimental"
     extraPorts:
       - name: otlp-grpc
         port: 4317
@@ -198,6 +199,10 @@ alloy:
         memory: 256Mi
     configMap:
       content: |
+        livedebugging {
+          enabled = true
+        }
+
         // --- 1. Logs Pipeline (Kubernetes Pods -> Loki) ---
         discovery.kubernetes "pods" {
           role = "pod"
