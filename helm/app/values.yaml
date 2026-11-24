@@ -236,7 +236,7 @@ dbUi:
   enabled: true
   image:
     repository: adminer
-    tag: "4.8.1"
+    tag: "6.3.1"
     pullPolicy: IfNotPresent
   service:
     type: LoadBalancer
