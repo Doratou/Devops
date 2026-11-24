@@ -78,6 +78,11 @@ kube-prometheus-stack:
 
 loki:
   deploymentMode: SingleBinary
+  monitoring:
+    serviceMonitor:
+      enabled: true
+    selfMonitoring:
+      enabled: false
   loki:
     auth_enabled: false
     commonConfig:
@@ -143,6 +148,8 @@ loki:
 
 tempo:
   replicas: 1
+  serviceMonitor:
+    enabled: true
   tempo:
     retention: 336h # 14 days
     receivers:
@@ -179,6 +186,8 @@ alloy:
   controller:
     type: deployment
     replicas: 1
+  serviceMonitor:
+    enabled: true
   alloy:
     stabilityLevel: "experimental"
     extraPorts:
