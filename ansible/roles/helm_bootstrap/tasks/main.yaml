@@ -37,9 +37,17 @@
     timeout: "{{ helm_bootstrap_install_timeout }}"
     kubeconfig: /etc/rancher/k3s/k3s.yaml
     values:
+      controller:
+        metrics:
+          enabled: true
+      repoServer:
+        metrics:
+          enabled: true
       server:
         extraArgs:
           - --insecure
+        metrics:
+          enabled: true
         service:
           type: LoadBalancer
           servicePortHttp: 3001
