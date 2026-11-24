@@ -231,3 +231,20 @@ rustfs:
     limits:
       cpu: 500m
       memory: 512Mi
+
+dbUi:
+  enabled: true
+  image:
+    repository: adminer
+    tag: "4.8.1"
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 4000
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
