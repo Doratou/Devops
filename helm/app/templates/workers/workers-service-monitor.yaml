@@ -1,0 +1,25 @@
+{{- if .Values.workers.enabled }}
+{{- range $name, $worker := .Values.workers.items }}
+{{- $svc := $worker.service | default dict }}
+{{- $metrics := $worker.metrics | default dict }}
+{{- if and $worker.enabled $metrics.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $.Release.Name }}-worker-{{ $name }}
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-worker-{{ $name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/component: worker
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $.Release.Name }}-worker-{{ $name }}
+  endpoints:
+    - port: {{ if and $svc.enabled (eq (int $metrics.port) (int $svc.targetPort)) }}http{{ else }}metrics{{ end }}
+      path: {{ $metrics.path | default "/metrics" }}
+      interval: {{ $metrics.interval | default "30s" }}
+{{- end }}
+{{- end }}
+{{- end }}
