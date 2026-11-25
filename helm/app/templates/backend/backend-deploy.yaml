@@ -45,6 +45,13 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.backend.databaseCredentials.existingSecret | quote }}
                   key: {{ .Values.backend.databaseCredentials.redisPasswordKey | quote }}
+            {{- if .Values.rabbitmq.enabled }}
+            - name: RMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.backend.databaseCredentials.existingSecret | quote }}
+                  key: {{ .Values.backend.databaseCredentials.rabbitmqPasswordKey | quote }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /health
