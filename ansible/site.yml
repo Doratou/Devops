@@ -36,6 +36,11 @@
       tags:
         - sealed_secret
         - secret
+    
+    - role: ingress_nginx
+      tags: 
+        - ingress
+        - ingress-nginx
 
     - role: helm_bootstrap
       tags:

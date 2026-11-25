@@ -1,0 +1,76 @@
+---
+- name: Add ingress-nginx Helm repository
+  kubernetes.core.helm_repository:
+    name: ingress-nginx
+    repo_url: https://kubernetes.github.io/ingress-nginx
+    state: present
+
+- name: Wait for a Kubernetes node to become Ready
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Node
+    kubeconfig: "{{ ingress_nginx_kubeconfig }}"
+  register: ingress_nginx_nodes
+  retries: 30
+  delay: 5
+  until:
+    - ingress_nginx_nodes.resources | length > 0
+    - ingress_nginx_nodes.resources | selectattr('status.conditions', 'defined') | list | length > 0
+    - >-
+      ingress_nginx_nodes.resources
+      | selectattr('status.conditions', 'defined')
+      | map(attribute='status.conditions')
+      | flatten
+      | selectattr('type', 'equalto', 'Ready')
+      | selectattr('status', 'equalto', 'True')
+      | list
+      | length > 0
+
+- name: Install ingress-nginx
+  kubernetes.core.helm:
+    name: "{{ ingress_nginx_release_name }}"
+    chart_ref: ingress-nginx/ingress-nginx
+    release_namespace: "{{ ingress_nginx_namespace }}"
+    create_namespace: true
+    state: present
+    wait: true
+    timeout: "{{ ingress_nginx_install_timeout }}"
+    kubeconfig: "{{ ingress_nginx_kubeconfig }}"
+    values:
+      controller:
+        config:
+          use-forwarded-headers: "true"
+          proxy-body-size: "20m"
+        metrics:
+          enabled: "{{ ingress_nginx_metrics_enabled }}"
+        service:
+          type: LoadBalancer
+          enableHttp: true
+          enableHttps: false
+        resources:
+          requests:
+            cpu: 50m
+            memory: 96Mi
+          limits:
+            cpu: 300m
+            memory: 256Mi
+
+- name: Wait for nginx IngressClass to be ready
+  kubernetes.core.k8s_info:
+    api_version: networking.k8s.io/v1
+    kind: IngressClass
+    name: nginx
+    kubeconfig: "{{ ingress_nginx_kubeconfig }}"
+  register: ingress_nginx_class
+  retries: 20
+  delay: 3
+  until: ingress_nginx_class.resources | length > 0
+
+- name: Display ingress-nginx access information
+  ansible.builtin.debug:
+    msg:
+      - "=========================================================="
+      - "ingress-nginx has been installed successfully."
+      - "IngressClass: nginx"
+      - "Listening Port: 80 (HTTP behind central reverse proxy)"
+      - "=========================================================="

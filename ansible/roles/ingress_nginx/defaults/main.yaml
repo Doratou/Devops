@@ -1,0 +1,6 @@
+---
+ingress_nginx_namespace: ingress-nginx
+ingress_nginx_release_name: ingress-nginx
+ingress_nginx_install_timeout: "{{ helm_bootstrap_install_timeout | default('10m') }}"
+ingress_nginx_kubeconfig: /etc/rancher/k3s/k3s.yaml
+ingress_nginx_metrics_enabled: true
