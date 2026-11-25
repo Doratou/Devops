@@ -17,7 +17,7 @@ web:
       drop:
         - ALL
   service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
   resources:
     limits:
@@ -220,6 +220,15 @@ rustfs:
     apiPort: 9000
     consolePort: 9001
   existingSecret: doratou-secrets
+  bucketPolicy:
+    enabled: true
+    image:
+      repository: public.ecr.aws/aws-cli/aws-cli
+      tag: latest
+      pullPolicy: IfNotPresent
+    secretKeys:
+      accessKey: RUSTFS_ACCESS_KEY
+      secretKey: RUSTFS_SECRET_KEY
   persistence:
     enabled: true
     size: 10Gi
