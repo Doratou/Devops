@@ -1,0 +1,38 @@
+{{- if .Values.workers.enabled }}
+{{- range $name, $worker := .Values.workers.items }}
+{{- if $worker.enabled }}
+{{- $svc := $worker.service | default dict }}
+{{- $metrics := $worker.metrics | default dict }}
+{{- if or $svc.enabled $metrics.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-worker-{{ $name }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    app.kubernetes.io/name: {{ $.Release.Name }}-worker-{{ $name }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/component: worker
+spec:
+  type: {{ if $svc.enabled }}{{ $svc.type | default "ClusterIP" }}{{ else }}ClusterIP{{ end }}
+  selector:
+    app.kubernetes.io/name: {{ $.Release.Name }}-worker-{{ $name }}
+  ports:
+    {{- if $svc.enabled }}
+    - name: http
+      port: {{ $svc.port }}
+      targetPort: http
+      protocol: TCP
+    {{- end }}
+    {{- if and $metrics.enabled (or (not $svc.enabled) (ne (int $metrics.port) (int $svc.targetPort))) }}
+    - name: metrics
+      port: {{ $metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

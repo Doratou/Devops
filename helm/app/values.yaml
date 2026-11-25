@@ -313,4 +313,89 @@ rabbitmq:
       cpu: 500m
       memory: 512Mi
 
+workers:
+  enabled: true
+  pullPolicy: Always
+  terminationGracePeriodSeconds: 30
+  items:
+    email:
+      enabled: true
+      replicaCount: 1
+      repository: ghcr.io/doratou/worker-email
+      # tag: ""
+      service:
+        enabled: false
+      probes:
+        enabled: false
+        path: /health
+        port: 9090
+      metrics:
+        enabled: false
+        path: /metrics
+        port: 9090
+        interval: 30s
+      extraEnv: []
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 192Mi
 
+    sms:
+      enabled: true
+      replicaCount: 1
+      repository: ghcr.io/doratou/worker-sms
+      service:
+        enabled: false
+      probes:
+        enabled: false
+        path: /health
+        port: 9090
+      metrics:
+        enabled: false
+        path: /metrics
+        port: 9090
+        interval: 30s
+      extraEnv: []
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 192Mi
+
+    ws:
+      enabled: true
+      replicaCount: 1
+      repository: ghcr.io/doratou/worker-ws
+      service:
+        enabled: true
+        type: ClusterIP 
+        port: 3000
+        targetPort: 3000
+      ingress:
+        enabled: false
+        path: /ws
+      probes:
+        enabled: false
+        path: /health
+        port: 3000
+      metrics:
+        enabled: false
+        path: /metrics
+        port: 3000
+        interval: 30s
+      extraEnv: []
+      # extraEnv:
+      #   - name: WS_PORT
+      #     value: "8081"
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
