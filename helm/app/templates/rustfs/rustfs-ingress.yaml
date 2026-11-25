@@ -1,0 +1,23 @@
+---
+{{- if .Values.hasIngress }}
+{{- if .Values.rustfs.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-storage
+  annotations:
+    nginx.ingress.kubernetes.io/upstream-vhost: "{{ .Release.Name }}-rustfs.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.rustfs.service.apiPort }}"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /{{ .Values.backend.config.RUSTFS_BUCKET_NAME }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-rustfs
+                port:
+                  number: {{ .Values.rustfs.service.apiPort }}
+{{- end }}
+{{- end }}
