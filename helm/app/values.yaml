@@ -227,8 +227,8 @@ rustfs:
       tag: latest
       pullPolicy: IfNotPresent
     secretKeys:
-      accessKey: RUSTFS_ACCESS_KEY
-      secretKey: RUSTFS_SECRET_KEY
+      accessKey: RUSTFS_ACCESS_KEY_ID
+      secretKey: RUSTFS_SECRET_ACCESS_KEY
   persistence:
     enabled: true
     size: 10Gi
