@@ -42,6 +42,7 @@ backend:
     existingSecret: app-db-credentials
     postgresPasswordKey: postgresql-password
     redisPasswordKey: redis-password
+    rabbitmqPasswordKey: rabbitmq-password
   config:
     GIN_MODE: "release"
     HTTP_PROTCOL: "http"
@@ -108,7 +109,35 @@ backend:
     OAUTH_FRONTEND_ENDPOINT: "/auth/callback"
     HTTP_PROXY: "http://10.42.0.1:1081"
     HTTPS_PROXY: "http://10.42.0.1:1081"
-    NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
+    NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-rabbitmq,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
+
+    RMQ_HOST: ""
+    RMQ_PORT: "5672"
+    RMQ_USER: doratou_user
+    RMQ_VHOST: "/"
+    EMAIL_WORKER_CONCURRENCY: "2"
+    EMAIL_WORKER_PREFETCH: "10"
+    EMAIL_WORKER_MAX_RETRIES: "3"
+    EMAIL_WORKER_RETRY_DELAY: 10s
+
+    SMS_WORKER_CONCURRENCY: "2"
+    SMS_WORKER_PREFETCH: "10"
+    SMS_WORKER_MAX_RETRIES: "3"
+    SMS_WORKER_RETRY_DELAY: 10s
+
+    WS_WORKER_CONCURRENCY: "5"
+    WS_WORKER_PREFETCH: "20"
+    WS_WORKER_MAX_RETRIES: "3"
+    WS_WORKER_RETRY_DELAY: 10s
+    EMAIL_QUEUE_TTL: 24h
+    SMS_QUEUE_TTL: 15m
+    WS_QUEUE_TTL: 5m
+    DLQ_MESSAGE_TTL: 336h
+    NOTIFICATION_WS_REALTIME_TTL: 1m
+    NOTIFICATION_WS_STANDARD_TTL: 5m
+    NOTIFICATION_WS_NORMAL_TTL: 15m
+    NOTIFICATION_SEED_DEMO_EVENTS: "false"
+
   resources:
     requests:
       cpu: 100m
@@ -256,3 +285,32 @@ dbUi:
     limits:
       cpu: 150m
       memory: 128Mi
+
+rabbitmq:
+  enabled: true
+  image:
+    repository: rabbitmq
+    tag: 4-management-alpine
+    pullPolicy: IfNotPresent
+  auth:
+    username: doratou_user
+    vhost: "/"
+    existingSecret: app-db-credentials
+    passwordKey: rabbitmq-password
+  service:
+    type: ClusterIP
+    amqpPort: 5672
+    managementPort: 15672
+  persistence:
+    enabled: true
+    size: 2Gi
+    # storageClass: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+
