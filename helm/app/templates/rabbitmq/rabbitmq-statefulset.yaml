@@ -45,25 +45,24 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.rabbitmq.auth.existingSecret }}
                   key: {{ .Values.rabbitmq.auth.passwordKey }}
+          startupProbe:
+            tcpSocket:
+              port: amqp
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
           readinessProbe:
-            exec:
-              command:
-                - rabbitmq-diagnostics
-                - -q
-                - check_running
-            initialDelaySeconds: 15
+            tcpSocket:
+              port: amqp
             periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 6
+            timeoutSeconds: 3
+            failureThreshold: 3
           livenessProbe:
-            exec:
-              command:
-                - rabbitmq-diagnostics
-                - -q
-                - ping
-            initialDelaySeconds: 30
-            periodSeconds: 15
-            timeoutSeconds: 5
+            tcpSocket:
+              port: amqp
+            periodSeconds: 20
+            timeoutSeconds: 3
             failureThreshold: 5
           resources:
             {{- toYaml .Values.rabbitmq.resources | nindent 12 }}
