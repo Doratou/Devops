@@ -359,35 +359,35 @@ workers:
         limits:
           cpu: 200m
           memory: 192Mi
-    ws:
-      enabled: true
-      replicaCount: 1
-      repository: ghcr.io/doratou/worker-ws
-      service:
-        enabled: true
-        type: ClusterIP
-        port: 3000
-        targetPort: 3000
-      ingress:
-        enabled: false
-        path: /ws
-      probes:
-        enabled: false
-        path: /health
-        port: 3000
-      metrics:
-        enabled: false
-        path: /metrics
-        port: 3000
-        interval: 30s
-      extraEnv: []
-      # extraEnv:
-      #   - name: WS_PORT
-      #     value: "8081"
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          cpu: 250m
-          memory: 256Mi
+    # ws:
+    #   enabled: true
+    #   replicaCount: 1
+    #   repository: ghcr.io/doratou/worker-ws
+    #   service:
+    #     enabled: true
+    #     type: ClusterIP
+    #     port: 3000
+    #     targetPort: 3000
+    #   ingress:
+    #     enabled: false
+    #     path: /ws
+    #   probes:
+    #     enabled: false
+    #     path: /health
+    #     port: 3000
+    #   metrics:
+    #     enabled: false
+    #     path: /metrics
+    #     port: 3000
+    #     interval: 30s
+    #   extraEnv: []
+    #   # extraEnv:
+    #   #   - name: WS_PORT
+    #   #     value: "8081"
+    #   resources:
+    #     requests:
+    #       cpu: 50m
+    #       memory: 64Mi
+    #     limits:
+    #       cpu: 250m
+    #       memory: 256Mi
