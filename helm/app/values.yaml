@@ -31,7 +31,7 @@ backend:
   replicaCount: 2
   image:
     repository: ghcr.io/doratou/backend
-    tag: 7018ad5f62c2aa340aa758e45c259f5645b251a1
+    tag: 32b583a9a8003cfb2d0ae4a1cbfe9814e93ceda8
     pullPolicy: Always
   service:
     type: LoadBalancer
@@ -154,7 +154,7 @@ migration:
   enabled: true
   image:
     repository: ghcr.io/doratou/migration
-    tag: 7018ad5f62c2aa340aa758e45c259f5645b251a1
+    tag: 32b583a9a8003cfb2d0ae4a1cbfe9814e93ceda8
     pullPolicy: Always
   waitForPostgresqlImage: postgres:15-alpine
   backoffLimit: 3
@@ -164,7 +164,7 @@ docs:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/api-docs
-    tag: 7018ad5f62c2aa340aa758e45c259f5645b251a1
+    tag: 32b583a9a8003cfb2d0ae4a1cbfe9814e93ceda8
     pullPolicy: Always
   service:
     type: LoadBalancer
