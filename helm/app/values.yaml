@@ -2,7 +2,7 @@ web:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/frontend
-    tag: 40af5d7c4a64dca08b59a94b224582a24d45cebc
+    tag: e0e236e66a57b133c30c4e42b47bdd5a1c9111f2
     pullPolicy: Always
   podSecurityContext:
     runAsNonRoot: true
@@ -110,7 +110,6 @@ backend:
     HTTP_PROXY: "http://10.42.0.1:1081"
     HTTPS_PROXY: "http://10.42.0.1:1081"
     NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-rabbitmq,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
-
     RMQ_HOST: ""
     RMQ_PORT: "5672"
     RMQ_USER: doratou_user
@@ -119,12 +118,10 @@ backend:
     EMAIL_WORKER_PREFETCH: "10"
     EMAIL_WORKER_MAX_RETRIES: "3"
     EMAIL_WORKER_RETRY_DELAY: 10s
-
     SMS_WORKER_CONCURRENCY: "2"
     SMS_WORKER_PREFETCH: "10"
     SMS_WORKER_MAX_RETRIES: "3"
     SMS_WORKER_RETRY_DELAY: 10s
-
     WS_WORKER_CONCURRENCY: "5"
     WS_WORKER_PREFETCH: "20"
     WS_WORKER_MAX_RETRIES: "3"
@@ -137,7 +134,6 @@ backend:
     NOTIFICATION_WS_STANDARD_TTL: 5m
     NOTIFICATION_WS_NORMAL_TTL: 15m
     NOTIFICATION_SEED_DEMO_EVENTS: "false"
-
   resources:
     requests:
       cpu: 100m
@@ -285,7 +281,6 @@ dbUi:
     limits:
       cpu: 150m
       memory: 128Mi
-
 rabbitmq:
   enabled: true
   image:
@@ -312,7 +307,6 @@ rabbitmq:
     limits:
       cpu: 500m
       memory: 512Mi
-
 workers:
   enabled: true
   pullPolicy: Always
@@ -342,7 +336,6 @@ workers:
         limits:
           cpu: 200m
           memory: 192Mi
-
     sms:
       enabled: true
       replicaCount: 1
@@ -366,14 +359,13 @@ workers:
         limits:
           cpu: 200m
           memory: 192Mi
-
     ws:
       enabled: true
       replicaCount: 1
       repository: ghcr.io/doratou/worker-ws
       service:
         enabled: true
-        type: ClusterIP 
+        type: ClusterIP
         port: 3000
         targetPort: 3000
       ingress:
