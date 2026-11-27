@@ -2,7 +2,7 @@ web:
   replicaCount: 1
   image:
     repository: ghcr.io/doratou/frontend
-    tag: 1c22be5783a0f03e59bec8133d9a3ae11307e19c
+    tag: 209115e0a88c0da57e12e709adaf57381498d93e
     pullPolicy: Always
   podSecurityContext:
     runAsNonRoot: true
