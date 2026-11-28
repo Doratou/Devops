@@ -152,7 +152,8 @@ jobs:
             --namespace chart-testing \
             --from-literal=postgres-password=ci-only-admin-password \
             --from-literal=postgresql-password=ci-only-user-password \
-            --from-literal=redis-password=ci-only-redis-password
+            --from-literal=redis-password=ci-only-redis-password \
+            --from-literal=rabbitmq-password=ci-only-rabbitmq-password
           kubectl create secret generic doratou-secrets \
             --namespace chart-testing \
             --from-literal=JWT_SECRET_KEY=ci_test_jwt_secret_key_32bytes_minimum_value \
@@ -178,4 +179,4 @@ jobs:
           ct install --config .github/ct.yaml --charts helm/app \
             --namespace chart-testing \
             --helm-extra-args "--timeout 10m" \
-            --helm-extra-set-args "--set=sealedSecrets.database.enabled=false --set=sealedSecrets.backend.enabled=false" 
+            --helm-extra-set-args "--set=sealedSecrets.database.enabled=false --set=sealedSecrets.backend.enabled=false --set=backend.config.HTTP_PROXY= --set=backend.config.HTTPS_PROXY="
