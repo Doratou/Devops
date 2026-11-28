@@ -107,8 +107,8 @@ backend:
     OAUTH_FRONTEND_DOMAIN: "dorato.fpna.ir"
     OAUTH_FRONTEND_PORT: "443"
     OAUTH_FRONTEND_ENDPOINT: "/auth/callback"
-    HTTP_PROXY: "http://10.42.0.1:1081"
-    HTTPS_PROXY: "http://10.42.0.1:1081"
+    HTTP_PROXY: "http://10.42.0.1:1081"  # NOSONAR: internal cluster-only Xray HTTP proxy
+    HTTPS_PROXY: "http://10.42.0.1:1081"  # NOSONAR: internal cluster-only Xray HTTP proxy
     NO_PROXY: "localhost,127.0.0.1,doratou-rustfs,doratou-rabbitmq,doratou-postgresql,doratou-redis,.svc,.cluster.local,10.42.0.0/16,10.43.0.0/16,192.168.6.0/24,api.avalai.ir,dorato.fpna.ir"
     RMQ_HOST: ""
     RMQ_PORT: "5672"
@@ -287,9 +287,11 @@ dbUi:
     requests:
       cpu: 25m
       memory: 32Mi
+      ephemeral-storage: 64Mi
     limits:
       cpu: 150m
       memory: 128Mi
+      ephemeral-storage: 256Mi
 rabbitmq:
   enabled: true
   image:
@@ -313,9 +315,11 @@ rabbitmq:
     requests:
       cpu: 100m
       memory: 256Mi
+      ephemeral-storage: 128Mi
     limits:
       cpu: 500m
       memory: 512Mi
+      ephemeral-storage: 512Mi
 workers:
   enabled: true
   pullPolicy: Always
@@ -342,9 +346,11 @@ workers:
         requests:
           cpu: 50m
           memory: 64Mi
+          ephemeral-storage: 64Mi
         limits:
           cpu: 200m
           memory: 192Mi
+          ephemeral-storage: 256Mi
     sms:
       enabled: true
       replicaCount: 1
@@ -365,9 +371,11 @@ workers:
         requests:
           cpu: 50m
           memory: 64Mi
+          ephemeral-storage: 64Mi
         limits:
           cpu: 200m
           memory: 192Mi
+          ephemeral-storage: 256Mi
     # ws:
     #   enabled: true
     #   replicaCount: 1

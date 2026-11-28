@@ -24,6 +24,7 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: rabbitmq
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: rabbitmq
           image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"

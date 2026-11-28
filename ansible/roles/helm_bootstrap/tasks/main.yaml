@@ -83,7 +83,7 @@
       - "Argo CD has been installed successfully."
       - "Username: admin"
       - "Password: {{ helm_bootstrap_argocd_admin_password }}"
-      - "Access: http://<SERVER_IP>:3001"
+      - "Access: http://<SERVER_IP>:3001"  # NOSONAR: internal bootstrap HTTP endpoint (--insecure)
       - "=========================================================="
 
 - name: Fetch GitHub SSH host keys on port 443
